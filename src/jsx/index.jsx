@@ -43,6 +43,7 @@ var markDirty = function(){
 };
 
 window.resize = function(n){
+  if( n > 50 ) return;
   var mat = new Array(n);
   for(var i=0; i<n; i++){
     mat[i] = new Array(n);

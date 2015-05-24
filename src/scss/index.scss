@@ -30,8 +30,11 @@ body {
   right: 0;
 
   display: flex;
+  display: -webkit-flex;
   justify-content: space-around;
+  -webkit-justify-content: space-around;
   align-items: center;
+  -webkit-align-items: center;
 
   .error {
     height: 1em;
@@ -73,8 +76,11 @@ body {
 
   section.board {
     display: flex;
+    display: -webkit-flex;
     justify-content: center;
+    -webkit-justify-content: center;
     align-items: flex-start;
+    -webkit-align-items: flex-start;
     padding: 16mm;
 
     .list {
