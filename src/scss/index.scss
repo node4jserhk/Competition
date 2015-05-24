@@ -6,25 +6,129 @@
   font-family: 'Roboto', sans-serif;
 }
 
+body {
+  background: url('/img/sky.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-color: #f9f9f9;
+}
+
+.registration {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .error {
+    height: 1em;
+    color: red;
+    margin-bottom: 4mm;
+  }
+}
+
+.clock {
+  display: inline-block;
+  text-align: right;
+}
+
 .lobby {
+  //max-width: 800px;
+  //margin: 0 auto;
 
-  .grid {
-    display: flex;
+  section.header {
+    padding: 2mm;
 
-    .item {
-      width: 30px;
-      height: 30px;
-      box-shadow: 0 0 1px #333;
-      margin: 0;
+    .button {
+      float: right;
     }
 
-    .white {
-      background-color: white;
-    }
+    .gadget {
+      float: left;
+      margin: 0 5mm;
+      font-size: 2em;
+      text-align: center;
 
-    .black {
-      background-color: #777;
+      header {
+        font-weight: bold;
+        font-size: 0.5em;
+      }
+
+
     }
   }
 
+  section.board {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16mm;
+
+    .list {
+      margin: 2mm 15mm;
+    }
+  }
+
+  .dialog {
+    padding: 0;
+    background-color: white;
+    box-shadow: 0 0 100px #999;
+  }
+  //
+  //section.questions {
+  //  display: flex;
+  //  //justify-content: space-around;
+  //  align-items: flex-start;
+  //  align-content: flex-start;
+  //  flex-wrap: wrap;
+  //}
 }
+
+
+//.question {
+//  $normal-white: #aaa;
+//  $hover-white: white;
+//  $normal-black: #999;
+//  $hover-black: #888;
+//
+//  background-color: $normal-white;
+//  padding: 2mm;
+//  box-shadow: 0 0 1px #333;
+//  margin: 4mm;
+//
+//  .white {
+//    background-color: $normal-white;
+//  }
+//
+//  .black {
+//    background-color: $normal-black;
+//  }
+//
+//  &:hover {
+//    background-color: $hover-white;
+//
+//    .white {
+//      background-color: $hover-white;
+//    }
+//
+//    .black {
+//      background-color: $hover-black;
+//    }
+//  }
+//
+//  header {
+//    text-align: center;
+//    font-weight: bold;
+//  }
+//
+//  .item {
+//    display: inline-block;
+//  }
+//
+//}

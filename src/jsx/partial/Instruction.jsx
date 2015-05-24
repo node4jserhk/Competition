@@ -23,9 +23,10 @@ module.exports = React.createClass({
   }
   ,
   render: function(){
-    var id = this.props.param.id;
     return <div>
-      <Modal onBackgroundClick={this._onBackgroundClick} >
+      <Modal ref="modal" onBackgroundClick={this._onBackgroundClick} >
+        <div>
+        </div>
       </Modal>
     </div>
   }

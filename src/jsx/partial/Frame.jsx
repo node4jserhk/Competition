@@ -19,9 +19,7 @@ var Frame = React.createClass({
   }
   ,
   render: function(){
-    return <div>
-      <RouteHandler />
-    </div>
+    return <RouteHandler />
   }
 });
 

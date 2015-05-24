@@ -15,9 +15,7 @@ socket.on('updates', function(e){
 ///////////////////////////////////////////////////////////
 /// game
 
-window.grid = [];
 window.questions = {};
-
 $.ajax({
   type: 'GET',
   url: '/questions'
@@ -29,8 +27,22 @@ $.ajax({
   })
 });
 
+window.size = 0;
+window.grid = [];
+var isDirty = false;
+var markDirty = function(){
+  if( isDirty ) return;
+  isDirty = true;
+  setImmediate(function() {
+    isDirty = false;
+    dispatch({
+      type: 'grid.new',
+      grid: window.grid
+    })
+  });
+};
 
-window.size = function(n){
+window.resize = function(n){
   var mat = new Array(n);
   for(var i=0; i<n; i++){
     mat[i] = new Array(n);
@@ -38,30 +50,25 @@ window.size = function(n){
       mat[i][j] = false;
     }
   }
+  window.size = n;
   window.grid = mat;
-  dispatch({
-    type: 'grid.new',
-    grid: window.grid
-  })
+  markDirty();
 };
 
-window.set = function(x,y){
-  window.grid[y][x] = true;
-  dispatch({
-    type: 'grid.new',
-    grid: window.grid
-  })
+window.set = function(y,x){
+  var size = window.size;
+  if( 0 <= x && x < size && 0 <= y && y < size){
+    window.grid[y][x] = true;
+    markDirty();
+  }
 };
 
-window.unset = function(x,y){
+window.unset = function(y,x){
   window.grid[y][x] = false;
-  dispatch({
-    type: 'grid.new',
-    grid: window.grid
-  })
+  markDirty();
 };
 
-window.clear = function(){
+window.unsetAll = function(){
   var mat = window.grid;
   var len = mat.length;
   for(var i=0; i<len; i++){
@@ -69,10 +76,7 @@ window.clear = function(){
       mat[i][j] = false;
     }
   }
-  dispatch({
-    type: 'grid.new',
-    grid: window.grid
-  })
+  markDirty();
 };
 
 window.check = function(){
@@ -81,7 +85,7 @@ window.check = function(){
   })
 };
 
-size(8);
+resize(8);
 
 ///////////////////////////////////////////////////////////
 /// App
@@ -95,12 +99,14 @@ var Frame = require('./partial/Frame.jsx');
 var Registration = require('./partial/Registration.jsx');
 var Lobby = require('./partial/Lobby.jsx');
 var Question = require('./partial/Question.jsx');
+var Instruction = require('./partial/Instruction.jsx');
 
 var routes = (
   <Route handler={Frame} >
     <DefaultRoute name="register" handler={Registration} />
     <Route name="lobby" handler={Lobby} >
       <Route name="question/:id" handler={Question} />
+      <Route name="instruction" handler={Instruction} />
     </Route>
   </Route>
 );

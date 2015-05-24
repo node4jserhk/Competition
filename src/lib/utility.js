@@ -26,6 +26,17 @@ function arrayGroupBy(arr, groupOf){
   return groups;
 }
 
+var make = function(n){
+  var mat = new Array(n);
+  for(var i=0; i<n; i++){
+    mat[i] = new Array(n);
+    for(var j=0; j<n; j++){
+      mat[i][j] = false;
+    }
+  }
+  return mat;
+};
+
 module.exports = {
   constant: constant,
   isUndefined: isUndefined,
@@ -33,5 +44,6 @@ module.exports = {
   isFalsity: isFalsity,
   isFunction: isFunction,
   keyValMap: objectKeyValMap,
-  arrayGroupBy: arrayGroupBy
+  arrayGroupBy: arrayGroupBy,
+  make: make
 };
