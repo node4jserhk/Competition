@@ -1,4 +1,5 @@
 var React = require('react');
+var Grid = require('../component/Grid.jsx');
 var Modal = require('../component/Modal.jsx');
 var Router = require('react-router');
 
@@ -19,13 +20,20 @@ module.exports = React.createClass({
   }
   ,
   _onBackgroundClick: function(){
-    this.goBack();
+    this.replaceWith('lobby');
   }
   ,
   render: function(){
-    var id = this.props.param.id;
+    var qid = this.props.params.id;
+    var q = questions[qid]  ;
+    var size = Math.min(400, q.size * 30) + 'px';
     return <div>
       <Modal onBackgroundClick={this._onBackgroundClick} >
+        <div className="paper">
+          <h2>{q.qid}</h2>
+          <h3>{q.size} x {q.size}</h3>
+          <Grid grid={q.pattern} size={size} />
+        </div>
       </Modal>
     </div>
   }

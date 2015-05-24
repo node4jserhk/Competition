@@ -68,16 +68,44 @@ module.exports = React.createClass({
         self.setState({ questions: e.questions })
       }
     });
+
+    $(React.findDOMNode(this.refs.editor)).append($('<pre id="editor" style="width: 400px; height: 300px;"/>'));
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/tomorrow_night");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.commands.addCommand({
+      name: 'myCommand',
+      bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
+      exec: function(editor) {
+        try{
+          eval(editor.getValue());
+        }
+        catch(ex){
+          log(ex);
+        }
+      },
+      readOnly: true
+    });
   }
   ,
   componentWillUnmount: function(){
+    log('this should never be unmounted');
   }
   ,
   _onInstruction: function(){
     this.transitionTo('instruction');
   }
   ,
+  _onQuestionClick: function(qid){
+    var self = this;
+    return function(){
+      self.transitionTo('/lobby/question/' + qid);
+    }
+  }
+  ,
   render: function(){
+    var self = this;
     var questions = this.state.questions;
 
     return <div className="lobby">
@@ -96,8 +124,10 @@ module.exports = React.createClass({
 
       <section className="board">
         <div className="dialog">
-          <Grid grid={this.state.grid} size="300" />
+          <Grid grid={this.state.grid} size="300px" />
         </div>
+        <div ref="editor" />
+
         <div className="ui list">
           <div>Ranking</div>
           <div className="item">
@@ -127,7 +157,9 @@ module.exports = React.createClass({
         {
           Object.keys(questions).map(function(k){
             var q = questions[k];
-            return <Question key={q.qid} question={q} />
+            return <div key={q.qid} onClick={self._onQuestionClick(k)}>
+              <Question question={q} />
+            </div>
           })
         }
       </section>

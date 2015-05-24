@@ -79,10 +79,30 @@ window.unsetAll = function(){
   markDirty();
 };
 
-window.check = function(){
-  socket.emit('finish', {
+function isEqual(a,b){
+  if( a.length !== b.length ) return false;
+  var len = a.length;
+  for(var i=0; i<len; i++){
+    for(var j=0; j<len; j++){
+      if( a[i][j] !== b[i][j] ) return false;
+    }
+  }
+  return true;
+}
 
-  })
+window.check = function(){
+  for(var i in questions){
+    var q = questions[i];
+    if( isEqual(grid, q.pattern ) ){
+      dispatch({
+        type: 'notify',
+        message: 'Congratulation! You have solved ' + q.qid + ' and earn ' + q.score + ' points'
+      });
+      socket.emit('finish', {
+        // todo
+      })
+    }
+  }
 };
 
 resize(8);
@@ -105,7 +125,7 @@ var routes = (
   <Route handler={Frame} >
     <DefaultRoute name="register" handler={Registration} />
     <Route name="lobby" handler={Lobby} >
-      <Route name="question/:id" handler={Question} />
+      <Route path="question/:id" handler={Question} />
       <Route name="instruction" handler={Instruction} />
     </Route>
   </Route>

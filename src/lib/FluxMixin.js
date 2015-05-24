@@ -23,7 +23,6 @@ dispatcher.mixin = {
   }
   ,
   register: function (handler) {
-    log('register');
     var handlerId = dispatcher.register(handler);
     this.handlerIDs.push(handlerId);
     return handlerId;
@@ -31,7 +30,7 @@ dispatcher.mixin = {
   ,
   componentWillUnmount: function() {
     var arr = this.handlerIDs;
-    for(var i=0; i<arr.length; i++) log('unregister'), dispatcher.unregister(arr[i]);
+    for(var i=0; i<arr.length; i++) dispatcher.unregister(arr[i]);
   }
 };
 
