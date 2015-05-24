@@ -57,10 +57,6 @@ module.exports = React.createClass({
           </div>
 
           <h3>Example</h3>
-          <div>
-          </div>
-
-
         </div>
       </Modal>
     </div>

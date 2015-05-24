@@ -69,7 +69,8 @@ module.exports = React.createClass({
       }
     });
 
-    $(React.findDOMNode(this.refs.editor)).append($('<pre id="editor" style="width: 400px; height: 300px;"/>'));
+    var s = "resize(8);\nfor(var i=0; i&lt;size; i++) set(i, 0);\ncheck();";
+    $(React.findDOMNode(this.refs.editor)).append($('<pre id="editor" style="width: 400px; height: 300px;">' + s + '</pre>'));
 
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow_night");
