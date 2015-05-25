@@ -1,6 +1,6 @@
 var React = require('react');
 var Grid = require('../component/Grid.jsx');
-var Modal = require('../component/Modal.jsx');
+var Modal = require('../component/modal.jsx');
 var Router = require('react-router');
 
 module.exports = React.createClass({
