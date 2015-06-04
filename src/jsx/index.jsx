@@ -15,20 +15,16 @@ socket.on('updates', function(e){
 ///////////////////////////////////////////////////////////
 /// game
 
-window.questions = {};
-$.ajax({
-  type: 'GET',
-  url: '/questions'
-}).done(function(qs){
-  window.questions = qs;
-  dispatch({
-    type: 'question.new',
-    questions: qs
-  })
-});
+// before, after, between
+var state = window.state = {
+  mode: "before",
+  profile: {},
+  questions: {},
+  size: 0,
+  grid: [],
+  rank: []
+};
 
-window.size = 0;
-window.grid = [];
 var isDirty = false;
 var markDirty = function(){
   if( isDirty ) return;
@@ -37,7 +33,7 @@ var markDirty = function(){
     isDirty = false;
     dispatch({
       type: 'grid.new',
-      grid: window.grid
+      grid: state.grid
     })
   });
 };
@@ -51,26 +47,26 @@ window.resize = function(n){
       mat[i][j] = false;
     }
   }
-  window.size = n;
-  window.grid = mat;
+  state.size = n;
+  state.grid = mat;
   markDirty();
 };
 
 window.set = function(y,x){
   var size = window.size;
   if( 0 <= x && x < size && 0 <= y && y < size){
-    window.grid[y][x] = true;
+    state.grid[y][x] = true;
     markDirty();
   }
 };
 
 window.unset = function(y,x){
-  window.grid[y][x] = false;
+  state.grid[y][x] = false;
   markDirty();
 };
 
 window.unsetAll = function(){
-  var mat = window.grid;
+  var mat = state.grid;
   var len = mat.length;
   for(var i=0; i<len; i++){
     for(var j=0; j<len; j++){
@@ -105,6 +101,20 @@ window.check = function(){
     }
   }
 };
+
+///////////////////////////////////////////////////////////
+/// initialization
+
+$.ajax({
+  type: 'GET',
+  url: '/questions'
+}).done(function(qs){
+  state.questions = qs;
+  dispatch({
+    type: 'question.new',
+    questions: qs
+  })
+});
 
 resize(8);
 

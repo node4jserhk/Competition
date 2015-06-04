@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title></title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>-->
+  <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
+  <script src="/js/jquery.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="ui inverted teal vertical segment">
+    <div class="ui page grid">
+      <div class="column">
+        <h2 class="ui inverted header">Full Width Background</h2>
+        <p>First section of content</p>
+      </div>
+    </div>
+  </div>
+  <div class="ui two column centered grid">
+    <div class="column">
+      <div>Time Remaining</div>
+      <h1 id="time"></h1>
+    </div>
+    <div class="two column centered row">
+
+    </div>
+  </div>
+  <div class="ui green button">START</div>
+
+  <script>
+
+
+    var time = document.getElementById('time');
+    var startTime = Date.now();
+    setInterval(function(){
+      time.innerHTML = ((Date.now()-startTime)/1000).toFixed(3);
+    }, 17)
+
+
+  </script>
+</body>
+</html>

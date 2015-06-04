@@ -25,7 +25,7 @@ module.exports = React.createClass({
   ,
   render: function(){
     var qid = this.props.params.id;
-    var q = questions[qid]  ;
+    var q = state.questions[qid]  ;
     var size = Math.min(400, q.size * 30) + 'px';
     return <div>
       <Modal onBackgroundClick={this._onBackgroundClick} >

@@ -6,7 +6,7 @@ module.exports = [
     method: 'GET',
     path: '/',
     handler: function(request,reply){
-      reply.redirect('/static/index.html')
+      reply.redirect('/www/index.html')
     },
     config: {
       tags: [filename]
@@ -14,7 +14,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/static/{param*}',
+    path: '/www/{param*}',
     handler: {
       directory: {
         path: './'

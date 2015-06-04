@@ -5,26 +5,27 @@ var child = require('child_process');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var source = require("vinyl-source-stream");
-
+var changed = require('gulp-changed');
+var notify = require('gulp-notify');
+var nodemon = require('gulp-nodemon');
 var sass = require('gulp-sass');
 var browserify = require('browserify');
 var browserSync = require('browser-sync');
-
-var nodemon = require('gulp-nodemon');
-
 
 ///////////////////////////////////////////////////////////
 // tasks
 
 gulp.task('copyStaticFiles', function(){
   gulp.src('src/static/**')
+    .pipe(changed('www'))
     .pipe(gulp.dest('www'))
 });
 
 gulp.task('scss', function () {
   gulp.src('./src/scss/index.scss')
     .pipe(sass().on('error', gutil.log))
-    .pipe(gulp.dest('www/css'));
+    .pipe(gulp.dest('www/css'))
+    .pipe(notify('scss: <%= file.relative %>'));
 });
 
 var b = browserify();
@@ -34,7 +35,8 @@ gulp.task('browserify', function(){
   b.bundle()
     .on('error', gutil.log)
     .pipe(source('index.js'))
-    .pipe(gulp.dest('www/js'));
+    .pipe(gulp.dest('www/js'))
+    .pipe(notify('browserify: <%= file.relative %>'));
 });
 
 var reload = browserSync.reload;
@@ -61,7 +63,6 @@ gulp.task('build', ['copyStaticFiles', 'scss', 'browserify']);
 
 ///////////////////////////////////////////////////////////
 
-
 gulp.task('default', ['build', 'start', 'browserSync'], function(){
 
   // static
@@ -72,8 +73,6 @@ gulp.task('default', ['build', 'start', 'browserSync'], function(){
 
   // jsx
   gulp.watch(['src/jsx/**'], [ 'browserify' ]);
-
-
 
   // browser sync
   gulp.watch('www/css/**', function(event){

@@ -1,11 +1,9 @@
 var Dispatcher = require('flux').Dispatcher;
+
 // global setImmediate
 require("setimmediate");
 
-
-var id = 0;
 var dispatcher = new Dispatcher();
-
 window.dispatch = dispatcher.dispatch.bind(dispatcher);
 
 dispatcher.mixin = {

@@ -49,8 +49,9 @@ module.exports = React.createClass({
   ,
   getInitialState: function(){
     return {
-      grid: window.grid,
-      questions: window.questions
+      mode: state.mode,
+      grid: state.grid,
+      questions: state.questions
     };
   }
   ,
@@ -91,7 +92,7 @@ module.exports = React.createClass({
   }
   ,
   componentWillUnmount: function(){
-    log('this should never be unmounted');
+    log('this should never be unmounted!!');
   }
   ,
   _onInstruction: function(){
