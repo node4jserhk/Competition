@@ -13,10 +13,53 @@ var browserify = require('browserify');
 var browserSync = require('browser-sync');
 
 ///////////////////////////////////////////////////////////
+// helper
+
+/**
+ * NOTE:
+ *
+ * files are removed in parallel
+ *
+ * If there are no error, callback will only be called once.
+ *
+ * If there are multiple errors, callback will be called
+ * exactly as many time as errors occur. (and no final callback)
+ *
+ * Sometimes, this behavior maybe useful, but users
+ * should be aware of this and handle error in callback.
+ *
+ */
+
+function rmfile(dir, file, callback){
+  var p = join(dir, file);
+  fs.lstat(p, function(err, stat){
+    if(err) callback.call(null,err);
+    else if(stat.isDirectory()) rmdir(p, callback);
+    else fs.unlink(p, callback)
+  })
+}
+
+function rmdir(dir, callback){
+  fs.readdir(dir, function(err,files){
+    if(err) callback.call(null,err);
+    else if( files.length ){
+      var i,j;
+      for(i=j=files.length; i--; ){
+        rmfile(dir,files[i], function(err){
+          if(err) callback.call(null, err);
+          else if(--j === 0 ) fs.rmdir(dir,callback)
+        })
+      }
+    }
+    else fs.rmdir(dir, callback)
+  })
+}
+
+///////////////////////////////////////////////////////////
 // tasks
 
 gulp.task('copyStaticFiles', function(){
-  gulp.src('src/static/**')
+  gulp.src('./src/static/**')
     .pipe(changed('www'))
     .pipe(gulp.dest('www'))
 });
@@ -60,6 +103,15 @@ gulp.task('start', function () {
 });
 
 gulp.task('build', ['copyStaticFiles', 'scss', 'browserify']);
+
+gulp.task('clean', function(done){
+  var called = false;
+  rmdir('./www', function(err){
+    if(called) return;
+    called = true;
+    done(err);
+  });
+});
 
 ///////////////////////////////////////////////////////////
 

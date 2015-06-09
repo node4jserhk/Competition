@@ -5,6 +5,7 @@ module.exports = {
   qid:  basename(__filename, '.js'),
   score: 5,
   size: 13,
+  level: 2,
   pattern: (function(){
     var len = 13;
     var mat = U.make(len);

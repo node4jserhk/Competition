@@ -20,7 +20,7 @@ module.exports = React.createClass({
   }
   ,
   _onBackgroundClick: function(){
-    this.replaceWith('lobby');
+    //this.replaceWith('lobby');
   }
   ,
   render: function(){
@@ -30,9 +30,9 @@ module.exports = React.createClass({
     return <div>
       <Modal onBackgroundClick={this._onBackgroundClick} >
         <div className="paper">
+          <Grid grid={q.pattern} size={size} />
           <h2>{q.qid}</h2>
           <h3>{q.size} x {q.size}</h3>
-          <Grid grid={q.pattern} size={size} />
         </div>
       </Modal>
     </div>

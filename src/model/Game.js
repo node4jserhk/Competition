@@ -1,86 +1,102 @@
-var fs = require('fs');
 var Log = require('../lib/Log.js');
 var U = require('../lib/utility.js');
-
-var join = require('path').join;
 
 ///////////////////////////////////////////////////////////
 /// initialization
 
 
-var profiles = {};
-var questions = {};
-
-fs.readdir( join(__dirname, '../question'), function(err,files){
-  if(err) return done(err);
-  for(var i=0; i < files.length; i++){
-    var file = files[i];
-    if( file.match(/(\.js|\.json)$/) ){
-      var p = join(__dirname, '../question/', file );
-      var q = require(p);
-      questions[q.qid] = q;
-      Log.i('loading questions', q.qid);
-    }
-  }
-});
+var mode = "before";
+var startTime = null;
+var endTime = null;
+var timer = null;
 
 ///////////////////////////////////////////////////////////
 
-exports.startOn = function(time){
+exports.launch = function(minute, password){
+  Log.d('launch', minute, password);
+  if( typeof minute !== 'number' || password !== 'node4jser' ) return;
+  var now = Date.now();
+  exports.schedule(now, now + minute * 60 * 1000);
+};
 
+exports.schedule = function(s, e){
+  if( typeof s !== 'number' || typeof e !== 'number' || e <= s ) return;
+
+  startTime = s;
+  endTime = e;
+  var now = Date.now();
+  if( timer !== null ){
+    clearTimeout(timer);
+    timer = null;
+  }
+
+  if( now < startTime ){
+    mode = 'before';
+    timer = setTimeout(function() {
+      exports.start();
+      timer = setTimeout(exports.end, endTime - Date.now());
+    }, startTime - now);
+
+  }
+  else if( now < endTime ){
+    timer = setTimeout(exports.end, endTime - now);
+    exports.start();
+  }
+  else {
+    exports.end();
+  }
+};
+
+exports.start = function(){
+  mode = 'between';
+  broadcast('State.start', {
+    mode: mode,
+    startTime: startTime,
+    endTime: endTime,
+    now: Date.now()
+  });
+};
+
+exports.end = function(){
+  mode = 'after';
+  broadcast('State.end', {
+    mode: mode,
+    startTime: startTime,
+    endTime: endTime,
+    now: Date.now()
+  });
+};
+
+exports.getMode = function(){
+  return mode;
+};
+
+exports.isStarted = function(){
+  if( startTime === null || endTime === null ) return false;
+  var now = Date.now();
+  return startTime < now && now < endTime;
 };
 
 exports.isEnded = function(){
-
+  if( endTime === null ) return false;
+  return endTime < Date.now() ;
 };
 
-var getProfile = exports.getProfile = function(name){
-  var profile = profiles[name];
-  if( U.isUndefined(profile) ){
-    Log.i('New Profile', name);
-    profile = profiles[name] = {
-      name: name,
-      count: 0,
-      score: 0,
-      lastAnswerAt: 0,
-      answer: {}
-    };
-  }
-  return profile;
+exports.getTimes = function(callback){
+  callback(startTime, endTime, Date.now());
 };
 
-exports.finish = function(name, qid){
-  var profile = getProfile(name);
-  var question = questions[qid];
-  if( U.isFalsity(question) ) return;
+///////////////////////////////////////////////////////////
 
-  profile.count += 1;
-  profile.score += question.score;
-  profile.lastAnswerAt = Date.now();
-  profile.answer[qid] = {
-    index: profile.count,
-    time: Date.now()
-  };
-};
+// allow client to see and call them
+exports.schedule.callable = true;
+exports.launch.callable = true;
 
-exports.getQuestions = function(){
-  return questions;
-};
+// allow clients to call and reply to them
+// callback is appended to the last arguments
+exports.getMode.requestable = true;
+exports.isStarted.requestable = true;
+exports.isEnded.requestable = true;
 
-exports.getTop = function(n){
-  var names = Object.keys(profiles);
-  names.sort(function(a,b){
-    var sa = profiles[a].score;
-    var sb = profiles[b].score;
-    var ord = (sa < sb) - (sa > sb);
-    if( ord ) return ord;
-    var ta = profiles[a].lastAnswerAt;
-    var tb = profiles[b].lastAnswerAt;
-    return (ta > tb) - (ta < tb);
-  });
-
-  return names.slice(0,n).map(function(n){
-    return profiles[n];
-  })
-};
-
+// requestable Async
+exports.getTimes.requestableAsync = true;

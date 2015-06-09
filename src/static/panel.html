@@ -1,48 +1,120 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <title></title>
+<!--<!doctype html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+  <!--<title></title>-->
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<meta charset="utf-8">-->
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+  <!--<meta name="description" content="">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
 
-  <!--<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>-->
-  <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
-  <script src="/js/jquery.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-</head>
-<body>
-  <div class="ui inverted teal vertical segment">
-    <div class="ui page grid">
-      <div class="column">
-        <h2 class="ui inverted header">Full Width Background</h2>
-        <p>First section of content</p>
-      </div>
-    </div>
-  </div>
-  <div class="ui two column centered grid">
-    <div class="column">
-      <div>Time Remaining</div>
-      <h1 id="time"></h1>
-    </div>
-    <div class="two column centered row">
+  <!--&lt;!&ndash;<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>&ndash;&gt;-->
+  <!--<link rel="stylesheet" type="text/css" href="css/semantic.min.css" />-->
+  <!--<script src="/js/jquery.js"></script>-->
+  <!--<script src="/socket.io/socket.io.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+  <!--<div class="ui inverted teal vertical segment">-->
+    <!--<div class="ui page grid">-->
+      <!--<div class="column">-->
+        <!--<h2 class="ui inverted header">Full Width Background</h2>-->
+        <!--<p>First section of content</p>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="ui two column centered grid">-->
+    <!--<div class="row">-->
+      <!--<div class="two column">-->
+        <!--<div>Time Remaining</div>-->
+        <!--<h1 id="time"></h1>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+      <!--<div class="three column">-->
+        <!--<form class="ui form">-->
+          <!--<div class="fields">-->
+            <!--<div class="field">-->
+              <!--<label>Duration (min)</label>-->
+              <!--<input type="number" />-->
+            <!--</div>-->
+            <!--<div class="field">-->
+              <!--<label>Pass-phrase</label>-->
+              <!--<input type="password" />-->
+            <!--</div>-->
+          <!--</div>-->
 
-    </div>
-  </div>
-  <div class="ui green button">START</div>
-
-  <script>
-
-
-    var time = document.getElementById('time');
-    var startTime = Date.now();
-    setInterval(function(){
-      time.innerHTML = ((Date.now()-startTime)/1000).toFixed(3);
-    }, 17)
+        <!--</form>-->
+        <!--<div class="ui green button" onclick="start()">START</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
 
-  </script>
-</body>
-</html>
+  <!--<script>-->
+    <!--///////////////////////////////////////////////////////////-->
+    <!--/// initialization-->
+
+
+    <!--// build api-->
+    <!--function makeApi(api){-->
+      <!--if( Array.isArray(api) ){-->
+        <!--var type = api[0];-->
+        <!--if( type === 'call' ){-->
+          <!--return function(){-->
+            <!--socket.emit(api[1], {-->
+              <!--args: Array.prototype.slice.call(arguments)-->
+            <!--})-->
+          <!--}-->
+        <!--}-->
+        <!--else if( type === 'request' ){-->
+          <!--return function(){-->
+            <!--var len = arguments.length;-->
+            <!--if( len === 0 || typeof arguments[len-1] !== 'function' )-->
+              <!--throw new Error('request without callback');-->
+            <!--var args = Array.prototype.slice.call(arguments,0,len-1);-->
+            <!--var cb = arguments[len-1];-->
+            <!--$.ajax({-->
+              <!--type: 'POST',-->
+              <!--url: api[1],-->
+              <!--contentType: 'application/json',-->
+              <!--data: JSON.stringify(args)-->
+            <!--}).done(function(data){-->
+              <!--cb.apply(null, data);-->
+            <!--})-->
+          <!--}-->
+        <!--}-->
+      <!--}-->
+      <!--else if( typeof api === 'object' ){-->
+        <!--var t = {};-->
+        <!--for(var key in api ) t[key] = makeApi(api[key]);-->
+        <!--return t;-->
+      <!--}-->
+    <!--}-->
+
+    <!--function start(){-->
+      <!--var now = Date.now();-->
+      <!--api.Game.schedule(now + 3*1000, now + 10*60*1000);-->
+
+      <!--api.Game.getTimes(function(s,e,n){-->
+        <!--var drift = Date.now() - n;-->
+        <!--setInterval(function(){-->
+          <!--var remain = e + drift - Date.now();-->
+          <!--time.textContent = (remain/1000).toFixed(3);-->
+        <!--}, 17)-->
+      <!--})-->
+    <!--}-->
+
+    <!--var socket = new io();-->
+
+    <!--$.ajax({-->
+      <!--type: "GET",-->
+      <!--url: '/api.js'-->
+    <!--}).done(function(json){-->
+      <!--window.api = makeApi(json);-->
+
+      <!--var time = document.getElementById('time');-->
+      <!--var startTime = Date.now();-->
+    <!--});-->
+  <!--</script>-->
+<!--</body>-->
+<!--</html>-->

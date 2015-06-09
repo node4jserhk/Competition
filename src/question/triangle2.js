@@ -1,13 +1,14 @@
 var U = require('../lib/utility.js');
 
 var log = console.log.bind(console);
+var len = 16;
 
 module.exports = {
   qid: 'triangle2',
   score: 5,
-  size: 32,
+  size: len,
+  level: 4,
   pattern: (function(){
-    var len = 32;
     var mat = U.make(len);
 
     var row = new Array(len);

@@ -1,12 +1,13 @@
 var U = require('../lib/utility.js');
 var basename = require('path').basename;
 
+var len = 12;
 module.exports = {
   qid: basename(__filename, '.js'),
   score: 5,
-  size: 13,
+  size: len,
+  level: 3,
   pattern: (function(){
-    var len = 13;
     var mat = U.make(len);
 
     function draw(y,x,n){

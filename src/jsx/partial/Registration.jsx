@@ -1,6 +1,8 @@
 var React = require('react');
 var Router = require('react-router');
 var FluxMixin = require('../../lib/FluxMixin.js');
+var State = require('../model/State.js');
+
 
 module.exports = React.createClass({
   mixins: [Router.Navigation, FluxMixin],
@@ -10,50 +12,52 @@ module.exports = React.createClass({
   ,
   getInitialState: function(){
     return {
-      name: ""
+      name: "",
+      error: ""
     };
   }
   ,
   componentDidMount: function(){
-
+    var self = this;
+    if( localStorage ) {
+      var player = localStorage.getItem('player');
+      if (player !== null) self.enter(player);
+    }
   }
   ,
   componentWillUnmount: function(){
+
   }
   ,
   _onUsernameChange: function(event){
     this.setState({ name: event.target.value });
   }
   ,
-  _onRegister: function(){
-    var self = this;
+  _onRegister: function() {
     var name = this.state.name;
-    if( name === '' ){
-      this.setState({error: 'Sorry, player name cannot be empty.'});
+    if (name === '') {
+      this.setState({ error: 'Sorry, player name cannot be empty.' });
     }
-    else {
-      $.ajax({
-        type: 'GET',
-        url: '/getProfile?name=' + this.state.name
-      }).done(function(profile){
-        window.profile = profile;
-        // todo: persisent name
-        self.transitionTo('lobby');
-      });
-    }
+    else this.enter(name);
+  }
+  ,
+  enter: function(name){
+    var self = this;
+    api.Profile.getProfile(name, function(profile){
+      if( localStorage ) localStorage.setItem('player', name);
+      State.setPlayer(name);
+      State.setProfile(profile);
+
+      api.Game.getMode(State.setMode);
+      api.Game.getTimes(State.setTimes);
+      api.Question.getQuestions(State.setQuestions);
+      api.Profile.getTop(10, State.setRank);
+
+      self.transitionTo('lobby');
+    });
   }
   ,
   render: function(){
-        //<form className="ui form segment" onSubmit={this._onRegister} >
-        //  <div className="fields">
-        //    <div className="field">
-        //      <label>Please Enter Player Name</label>
-        //      <input type="text" onChange={this._onUsernameChange}  />
-        //      <div className="error" >{ this.state.error }</div>
-        //    </div>
-        //  </div>
-        //  <button className="ui primary button">Register</button>
-        //</form>
     return <div className="registration" >
       <div className="dialog">
         <form onSubmit={this._onRegister} >

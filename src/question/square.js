@@ -4,6 +4,7 @@ module.exports = {
   qid: 'square',
   score: 5,
   size: 17,
+  level: 2,
   pattern: (function(){
     var len = 17;
     var mat = U.make(len);

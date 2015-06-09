@@ -41,6 +41,7 @@ module.exports = {
   qid: 'hilbert',
   score: 5,
   size: len,
+  level: 5,
   hint: "http://en.wikipedia.org/wiki/Hilbert_curve#Representation_as_Lindenmayer_system",
   pattern: (function(){
     var mat = U.make(len);

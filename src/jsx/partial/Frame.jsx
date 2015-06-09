@@ -11,20 +11,29 @@ var Frame = React.createClass({
   ,
   getInitialState: function(){
     return {
-      message: ''
+      message: '',
+      timer: null
     };
   }
   ,
   componentDidMount: function(){
     var self = this;
     this.register(function(e){
-      log(e);
       if( e.type === 'notify' ){
+        //log('notify', e);
+        var timer = self.state.timer;
+        if( timer !== null ) clearTimeout(timer);
+        timer = setTimeout(self.clear, 5000);
         self.setState({
-          message: e.message
+          message: e.message,
+          timer: timer
         })
       }
     })
+  }
+  ,
+  clear: function(){
+    this.setState({ message: '' });
   }
   ,
   componentWillUnmount: function(){
@@ -33,14 +42,12 @@ var Frame = React.createClass({
   render: function(){
     var msg = this.state.message;
     var notification = null;
-    if( msg !== '' ){
-      notification = <div className="notification" >{msg}</div>
-    }
+    var active = '';
+    if( msg !== '' ) active = 'active';
+
     return <div>
-      <div key="main">
-        { notification }
-        <RouteHandler />
-      </div>
+      <RouteHandler />
+      <div className={"notification " + active} >{msg}</div>
     </div>
   }
 });

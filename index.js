@@ -3,6 +3,7 @@ var join = require('path').join;
 var hapi = require('hapi');
 var async = require('async');
 var SocketIO = require('socket.io');
+var Comm = require('./src/lib/Comm.js');
 var Game = require('./src/model/Game.js');
 
 ///////////////////////////////////////////////////////////
@@ -26,52 +27,41 @@ server.path(join(__dirname, 'www'));
 // attach socket.io to web server
 var io = SocketIO(server.listener);
 
-
 ///////////////////////////////////////////////////////////
 // socket
-
-var models = [
-  { name: 'Game', model: require('./src/model/Game.js') }
-];
-
-function makeApi(socket){
-  for(var i=0; i<models.length; i++){
-    var m = models[i];
-    for(var i in m){
-      socket.on( m.name + '.' + i, function(){
-
-      })
-    }
-  }
-}
-
 
 io.on('connection', function(socket){
   Log.i('new connection');
 
-  socket.on('finish', function(m){
-    var name = m.name;
-    var qid = m.qid;
-
-    Game.finish(name, qid);
-    io.emit('updates', { rank: Game.getTop(10) })
-  });
-
-  socket.on('test', function(m){
-    log('1', m);
-  });
-
-  socket.on('test', function(m){
-    log('2', m);
-  });
-
-
+  Comm.patch(socket);
 });
+
+global.broadcast = function(event){
+  var len = arguments.length;
+  var args = Array.prototype.slice.call(arguments,1,len);
+  io.emit(event, { args: args } )
+};
+
+//var cnt = 0;
+//setInterval(function(){
+//  log('sending');
+//  broadcast('Board.test', 'a', cnt++ );
+//}, 1000);
 
 ///////////////////////////////////////////////////////////
 
+var registerLout = function(done){
+  server.register({ register: require('lout') }, function(err) {
+    done()
+  });
+};
+
 var setRoutes = function(done){
   var root = 'src/route';
+
+  // api
+  server.route(Comm.routes);
+
   fs.readdir( join(__dirname, root), function(err,files){
     if(err) return done(err);
     for(var i=0; i<files.length; i++){
@@ -93,7 +83,7 @@ var startServer = function(done){
   })
 };
 
-async.series([setRoutes, startServer]);
+async.series([registerLout, setRoutes, startServer]);
 
 ///////////////////////////////////////////////////////////
 

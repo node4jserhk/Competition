@@ -4,6 +4,8 @@ module.exports = {
   qid: 'cross1',
   score: 5,
   size: 5,
+  level: 1,
+  practice: true,
   pattern: (function(){
     var size = 5;
     var mat = U.make(size);

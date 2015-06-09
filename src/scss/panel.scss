@@ -1,0 +1,25 @@
+.panel {
+
+  .time-remain {
+    padding: 15mm 0;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: #455A64;
+
+    #time {
+      font-size: 6em;
+    }
+  }
+
+  .ranking {
+    width: 100mm;
+    margin: 2mm auto;
+    padding: 2mm;
+  }
+
+  .form {
+    width: 100mm;
+    margin: 2mm auto;
+  }
+}

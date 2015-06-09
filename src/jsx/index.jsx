@@ -1,122 +1,40 @@
 var React = require('react');
 var Flux = require('../lib/FluxMixin.js');
+var State = require('./model/State.js');
+var Board = require('./model/Board.js');
 
 window.log = console.log.bind(console);
 
 ///////////////////////////////////////////////////////////
 /// socket
 
-window.socket = new io();
+var socket = new io();
 
-socket.on('updates', function(e){
-  log('update', e);
-});
+var models = [
+  { name: 'Board', handlers: Board },
+  { name: 'State', handlers: State }
+];
 
-///////////////////////////////////////////////////////////
-/// game
+// listen broadcast
+(function(){
 
-// before, after, between
-var state = window.state = {
-  mode: "before",
-  profile: {},
-  questions: {},
-  size: 0,
-  grid: [],
-  rank: []
-};
-
-var isDirty = false;
-var markDirty = function(){
-  if( isDirty ) return;
-  isDirty = true;
-  setImmediate(function() {
-    isDirty = false;
-    dispatch({
-      type: 'grid.new',
-      grid: state.grid
-    })
-  });
-};
-
-window.resize = function(n){
-  if( n > 50 ) return;
-  var mat = new Array(n);
-  for(var i=0; i<n; i++){
-    mat[i] = new Array(n);
-    for(var j=0; j<n; j++){
-      mat[i][j] = false;
+  for(var i=models.length; i--; ){
+    var model = models[i];
+    for(var key in model.handlers ){
+      var handler = model.handlers[key];
+      if( handler.callable ) (function(handler){
+        var event = [model.name, key].join('.');
+        //log('listening', event);
+        socket.on( event , function(data){
+          handler.apply(null, data.args);
+        })
+      })(handler);
     }
   }
-  state.size = n;
-  state.grid = mat;
-  markDirty();
-};
 
-window.set = function(y,x){
-  var size = window.size;
-  if( 0 <= x && x < size && 0 <= y && y < size){
-    state.grid[y][x] = true;
-    markDirty();
-  }
-};
+})();
 
-window.unset = function(y,x){
-  state.grid[y][x] = false;
-  markDirty();
-};
 
-window.unsetAll = function(){
-  var mat = state.grid;
-  var len = mat.length;
-  for(var i=0; i<len; i++){
-    for(var j=0; j<len; j++){
-      mat[i][j] = false;
-    }
-  }
-  markDirty();
-};
-
-function isEqual(a,b){
-  if( a.length !== b.length ) return false;
-  var len = a.length;
-  for(var i=0; i<len; i++){
-    for(var j=0; j<len; j++){
-      if( a[i][j] !== b[i][j] ) return false;
-    }
-  }
-  return true;
-}
-
-window.check = function(){
-  for(var i in questions){
-    var q = questions[i];
-    if( isEqual(grid, q.pattern ) ){
-      dispatch({
-        type: 'notify',
-        message: 'Congratulation! You have solved ' + q.qid + ' and earn ' + q.score + ' points'
-      });
-      socket.emit('finish', {
-        // todo
-      })
-    }
-  }
-};
-
-///////////////////////////////////////////////////////////
-/// initialization
-
-$.ajax({
-  type: 'GET',
-  url: '/questions'
-}).done(function(qs){
-  state.questions = qs;
-  dispatch({
-    type: 'question.new',
-    questions: qs
-  })
-});
-
-resize(8);
 
 ///////////////////////////////////////////////////////////
 /// App
@@ -125,24 +43,88 @@ var Router = require('react-router');
 var Route = Router.Route;
 var DefaultRoute = Router.DefaultRoute;
 
-
 var Frame = require('./partial/Frame.jsx');
 var Registration = require('./partial/Registration.jsx');
 var Lobby = require('./partial/Lobby.jsx');
 var Question = require('./partial/Question.jsx');
 var Instruction = require('./partial/Instruction.jsx');
+var Panel = require('./partial/Panel.jsx');
 
+//<Route name="instruction" handler={Instruction} />
+//<Route path="question/:id" handler={Question} />
 var routes = (
   <Route handler={Frame} >
     <DefaultRoute name="register" handler={Registration} />
-    <Route name="lobby" handler={Lobby} >
-      <Route path="question/:id" handler={Question} />
-      <Route name="instruction" handler={Instruction} />
-    </Route>
+    <Route name="lobby" handler={Lobby} />
+    <Route name="panel" handler={Panel} />
   </Route>
 );
 
 
-Router.run(routes, function (Handler) {
-  React.render(<Handler/>, document.body);
+///////////////////////////////////////////////////////////
+/// initialization
+
+// build api
+function makeApi(api){
+  if( Array.isArray(api) ){
+    var type = api[0];
+    if( type === 'call' ){
+      return function(){
+        socket.emit(api[1], {
+          args: Array.prototype.slice.call(arguments)
+        })
+      }
+    }
+    else if( type === 'request' ){
+      return function(){
+        var len = arguments.length;
+        if( len === 0 || typeof arguments[len-1] !== 'function' )
+          throw new Error('request without callback');
+        var args = Array.prototype.slice.call(arguments,0,len-1);
+        var cb = arguments[len-1];
+        $.ajax({
+          type: 'POST',
+          url: api[1],
+          contentType: 'application/json',
+          data: JSON.stringify(args)
+        }).done(function(data){
+          cb.apply(null, data);
+        })
+      }
+    }
+  }
+  else if( typeof api === 'object' ){
+    var t = {};
+    for(var key in api ) t[key] = makeApi(api[key]);
+    return t;
+  }
+}
+
+$.ajax({
+  type: "GET",
+  url: '/api.js'
+}).done(function(json){
+  window.api = makeApi(json);
+
+  // test: start the game
+  //var now = Date.now();
+  //api.Game.schedule(now + 1000, now + 10*60*1000);
+
+  if( localStorage ) {
+    var player = localStorage.getItem('player');
+    if( player ) api.Profile.getProfile(player, function(profile){
+      State.setPlayer(player);
+      State.setProfile(profile);
+
+      api.Game.getMode(State.setMode);
+      api.Game.getTimes(State.setTimes);
+      api.Question.getQuestions(State.setQuestions);
+      api.Profile.getTop(10, State.setRank);
+    });
+  }
+
+  // mount react root
+  Router.run(routes, function (Handler) {
+    React.render(<Handler/>, document.body);
+  });
 });

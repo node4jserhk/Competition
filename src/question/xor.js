@@ -4,6 +4,7 @@ module.exports = {
   qid: 'xor',
   score: 5,
   size: 8,
+  level: 2,
   pattern: (function(){
     var len = 8;
     var mat = U.make(len);
