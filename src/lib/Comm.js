@@ -100,8 +100,6 @@ var routes = [];
 
 ///////////////////////////////////////////////////////////
 
-
-
 // json to be sent to client to build api (socket + http)
 exports.api = api;
 
