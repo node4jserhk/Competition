@@ -8,6 +8,7 @@ module.exports = {
   score: 5,
   size: len,
   level: 4,
+  hint: 'http://mathworld.wolfram.com/SierpinskiSieve.html',
   pattern: (function(){
     var mat = U.make(len);
 

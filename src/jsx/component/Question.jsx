@@ -24,13 +24,16 @@ var Question = React.createClass({
     var n = q.level;
     while(n--) stars.push(<i key={n} className="yellow star icon"></i> );
 
-    //<div>{ q.qid }</div>
+    var hint = "";
+    if( q.hint ) hint = <a href={q.hint} target="_blank">Hint</a>;
     return <div className="question-item">
       <Grid grid={q.pattern} size="80px"/>
       <div>Challenge #{this.props.index}</div>
+      <div>{ q.qid }</div>
       <div className="meta">{q.size}x{q.size} @{q.score}</div>
       <div>{ stars }</div>
       <div>{ time }</div>
+      <div>{ hint }</div>
     </div>
 
   }

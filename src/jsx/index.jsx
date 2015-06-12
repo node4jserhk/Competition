@@ -46,11 +46,8 @@ var DefaultRoute = Router.DefaultRoute;
 var Frame = require('./partial/Frame.jsx');
 var Registration = require('./partial/Registration.jsx');
 var Lobby = require('./partial/Lobby.jsx');
-var Question = require('./partial/Question.jsx');
 var Panel = require('./partial/Panel.jsx');
 
-//<Route name="instruction" handler={Instruction} />
-//<Route path="question/:id" handler={Question} />
 var routes = (
   <Route handler={Frame} >
     <DefaultRoute name="register" handler={Registration} />
