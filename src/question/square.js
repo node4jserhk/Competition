@@ -1,12 +1,12 @@
 var U = require('../lib/utility.js');
 
+var len = 15;
 module.exports = {
   qid: 'square',
   score: 5,
-  size: 17,
+  size: len,
   level: 2,
   pattern: (function(){
-    var len = 17;
     var mat = U.make(len);
 
     for(var i=0; i <= Math.floor(len/2); i+=2){

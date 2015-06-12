@@ -6,6 +6,7 @@ var Flux = require('../../lib/FluxMixin.js');
 var Grid = require('../component/Grid.jsx');
 var If = require('../component/If.jsx');
 var Ranking = require('../component/Ranking.jsx');
+var Question = require('../component/Question.jsx');
 var Board = require('../model/Board.js');
 var State = require('../model/State.js');
 
@@ -22,7 +23,8 @@ function formatTime(n){
 
 
 function mountEditor(node){
-  var s = "resize(5);\nfor(var i=0; i&lt;size; i++){\n    set(i, 2);\nset(2,i);\n}";
+  //var s = "resize(5);\nfor(var i=0; i&lt;size; i++){\n    set(i, 2);\n  set(2,i);\n}";
+  var s = "";
   $(node).append(
     $('<pre id="editor" >' + s + '</pre>')
   );
@@ -86,32 +88,6 @@ var Instruction = React.createClass({
     </div>
   }
 });
-
-var Question = React.createClass({
-  render: function(){
-    var q = this.props.question;
-    var ans = this.props.answer;
-    var time = '';
-    var stars = [];
-    if( ans ){
-      if( ans.time ) time = formatTime(ans.time + State.getDrift() - State.getStartTime() );
-    }
-    var n = q.level;
-    while(n--) stars.push(<i key={n} className="yellow star icon"></i> );
-
-    return <div className="question-item">
-      <Grid grid={q.pattern} size="80px"/>
-      <div>Challenge #{this.props.index}</div>
-      <div>{ q.qid }</div>
-      <div>{ stars }</div>
-      <div className="meta">{q.size}x{q.size}</div>
-      <div>{ time }</div>
-    </div>
-
-  }
-});
-
-
 
 ///////////////////////////////////////////////////////////
 
@@ -194,8 +170,10 @@ var Lobby = React.createClass({
     });
     sortedQuestions.sort(function(a,b){
       if( a.level === b.level ){
-        var x = a.name;
-        var y = b.name;
+        //var x = a.qid;
+        //var y = b.qid;
+        var x = a.size;
+        var y = b.size;
         return (x > y) - (x < y);
       }
       return a.level < b.level ? -1 : 1;
@@ -246,7 +224,7 @@ var Lobby = React.createClass({
         <div key="dashboard" className="dashboard">
           <div className="group">
             <p>Result</p>
-            <Grid grid={grid} size="250px" guide={false}/>
+            <Grid grid={grid} size="300px" guide={true}/>
           </div>
           <div id="editor" ref="editor"></div>
         </div>
