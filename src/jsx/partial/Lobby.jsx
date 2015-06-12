@@ -22,7 +22,7 @@ function formatTime(n){
 
 
 function mountEditor(node){
-  var s = "resize(5);\nfor(var i=0; i&lt;size; i++){ set(i, 2); set(2,i); }";
+  var s = "resize(5);\nfor(var i=0; i&lt;size; i++){\n    set(i, 2);\nset(2,i);\n}";
   $(node).append(
     $('<pre id="editor" >' + s + '</pre>')
   );
