@@ -3,9 +3,9 @@ var U = require('../lib/utility.js');
 var len = 15;
 module.exports = {
   qid: 'square',
-  score: 5,
+  score: 7,
   size: len,
-  level: 2,
+  level: 3,
   pattern: (function(){
     var mat = U.make(len);
 

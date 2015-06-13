@@ -5,7 +5,7 @@ var len = 16;
 
 module.exports = {
   qid: 'triangle2',
-  score: 5,
+  score: 14,
   size: len,
   level: 4,
   hint: 'http://mathworld.wolfram.com/SierpinskiSieve.html',

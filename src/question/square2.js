@@ -3,7 +3,7 @@ var U = require('../lib/utility.js');
 var len = 11;
 module.exports = {
   qid: 'square2',
-  score: 5,
+  score: 7,
   size: len,
   level: 3,
   pattern: (function(){

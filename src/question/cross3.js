@@ -3,7 +3,7 @@ var U = require('../lib/utility.js');
 var len = 12;
 module.exports = {
   qid: 'cross3',
-  score: 5,
+  score: 7,
   size: len,
   level: 3,
   pattern: (function(){

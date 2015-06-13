@@ -4,7 +4,7 @@ var basename = require('path').basename;
 var len = 13;
 module.exports = {
   qid: basename(__filename, '.js'),
-  score: 5,
+  score: 7,
   size: len,
   level: 3,
   pattern: (function(){

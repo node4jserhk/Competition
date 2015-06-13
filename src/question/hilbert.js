@@ -39,7 +39,7 @@ var ccw = function(n){
 var len = 17;
 module.exports = {
   qid: 'hilbert',
-  score: 5,
+  score: 23,
   size: len,
   level: 5,
   hint: "http://en.wikipedia.org/wiki/Hilbert_curve#Representation_as_Lindenmayer_system",
