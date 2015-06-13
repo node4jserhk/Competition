@@ -167,6 +167,7 @@ body {
 
       padding: 2mm;
       background-color: rgba(255,255,255,.3);
+      overflow-x: visible;
       overflow-y: scroll;
       border-radius: 4px;
       transition: 0.4s;
@@ -221,5 +222,36 @@ body {
   display: inline;
   height: auto;
 }
+
+
+
+//.question-box {
+//  position: relative;
+//}
+//.question-box strong {
+//  line-height: 2em;
+//}
+//.question-box > .question-box-content {
+//  display: none;
+//  height: 0;
+//  z-index: 200;
+//  padding: 14px 20px;
+//
+//  position: absolute;
+//
+//  right: -300px;
+//
+//  background-color: transparent;
+//}
+//.question-box:hover > .question-box-content {
+//  //display: flex;
+//  //align-items: center;
+//  //justify-content: center;
+//  display: inline;
+//  height: auto;
+//}
+
+
+
 
 

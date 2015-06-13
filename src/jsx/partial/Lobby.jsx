@@ -214,7 +214,7 @@ var Lobby = React.createClass({
           <p>Challenges</p>
           {
             sortedQuestions.map(function(q, i){
-              return <div key={q.qid} >
+              return <div className="question-box" key={q.qid} >
                 <Question index={i+1} question={q} answer={answers[q.qid]} />
               </div>
             })

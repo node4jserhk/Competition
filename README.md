@@ -17,4 +17,4 @@ A little competition that draw patterns on a grid
     
 ## Known issues
   - safari out grow browser window height (won't fix)
-  - firefox scroll slowly (due to large dom) (won't fix)
+  - IE is not tesed
