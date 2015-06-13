@@ -1,12 +1,12 @@
 var U = require('../lib/utility.js');
 
+var len = 8;
 module.exports = {
   qid: 'xor',
   score: 5,
-  size: 8,
+  size: len,
   level: 2,
   pattern: (function(){
-    var len = 8;
     var mat = U.make(len);
     for(var i=0; i<len; i++){
       for(var j=0; j<len; j++){

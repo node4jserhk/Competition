@@ -18,3 +18,6 @@ A little competition that draw patterns on a grid
 ## Known issues
   - safari out grow browser window height (won't fix)
   - IE is not tested
+  
+## Solutions?
+  - read /src/question/<question_name>

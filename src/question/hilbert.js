@@ -2,13 +2,18 @@ var U = require('../lib/utility.js');
 
 /***
  *
- * Encoding
+ * Direction Encoding
  *
- * YYXX (4-bits)
+ * YYXX (in 4-bits)
+ * YY: displacement in Y-axis
+ * XX: displacement in X-axis
+ *
  * 00: -1
  * 01: 0
  * 10: 1
  *
+ * values:
+ * 
  *    1
  *  4 5 6
  *    9
@@ -46,10 +51,12 @@ module.exports = {
   pattern: (function(){
     var mat = U.make(len);
 
+    // initial states
     var y = 1;
     var x = 1;
     var dir = 6;
 
+    // operations
     var forward = function(){
       for(var i=0; i<2; i++){
         x += dx(dir);
@@ -64,6 +71,7 @@ module.exports = {
       dir = ccw(dir);
     };
 
+    // mutual recursion
     var A = function(depth){
       if( depth < 0 ) return;
       depth--;
