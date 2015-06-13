@@ -12,9 +12,9 @@ A little competition that draw patterns on a grid
     + press Ctrl-Enter(Win) or Cmd-Enter(Mac) to check
   - for host 
     + go to /www/index.html#/panel
-    + enter number of minute of competition and passphrase
+    + enter number of minute of competition and pass-phrase "node4jser"
     + start the competition
     
 ## Known issues
   - safari out grow browser window height (won't fix)
-  - IE is not tesed
+  - IE is not tested
