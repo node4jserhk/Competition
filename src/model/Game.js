@@ -72,9 +72,7 @@ exports.getMode = function(){
 };
 
 exports.isStarted = function(){
-  if( startTime === null || endTime === null ) return false;
-  var now = Date.now();
-  return startTime < now && now < endTime;
+  return mode === 'between';
 };
 
 exports.isEnded = function(){

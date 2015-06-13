@@ -1,9 +1,0 @@
-details
-
-ranking information update
-
-notification bar
-
-start competition control
-
-js editor

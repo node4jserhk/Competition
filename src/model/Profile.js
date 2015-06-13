@@ -1,4 +1,3 @@
-var fs = require('fs');
 var join = require('path').join;
 
 var Log = require('../lib/Log.js');
@@ -17,7 +16,7 @@ exports.getProfile = function(name){
     Log.i('New Profile', name);
     profile = profiles[name] = {
       name: name,
-      count: 0,           // number of question answerd
+      count: 0,           // number of question answered
       score: 0,           // total score obtained
       lastAnswerAt: 0,
       answer: {}
@@ -64,9 +63,11 @@ exports.getTop = function(n){
   //  return profiles[n];
   //});
 
-  names.filter(function(a) {
+  names = names.filter(function(a) {
     return profiles[a].score > 0;
-  }).sort(function(a,b){
+  });
+
+  names.sort(function(a,b){
     var sa = profiles[a].score;
     var sb = profiles[b].score;
     var ord = (sa < sb) - (sa > sb);
