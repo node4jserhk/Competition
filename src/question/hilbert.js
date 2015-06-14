@@ -13,7 +13,7 @@ var U = require('../lib/utility.js');
  * 10: 1
  *
  * values:
- * 
+ *
  *    1
  *  4 5 6
  *    9
