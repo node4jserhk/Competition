@@ -18,8 +18,8 @@ module.exports = {
 
     for(var i=0; i<len; i++){
       for(var j=len; j--;){
-        if( row[j] % 2 == 1) mat[i][j] = true;
-        if( j >= 1 ) row[j] += row[j-1];
+        if( row[j] ) mat[i][j] = true;
+        if( j >= 1 ) row[j] = (row[j] + row[j-1]) & 1;
       }
     }
     return mat;
