@@ -4,11 +4,12 @@ A little competition that draw patterns on a grid
 ## How to run?
   - npm install
   - cp config.sample.js config.js
-  - development:
-      gulp
-    production:
-      gulp build 
-      iojs index.js
+  - run
+      + development:
+          * gulp
+      + production:
+          * gulp build 
+          * iojs index.js
   - for player 
     + go to /www/index.html
     + enter unique player name
