@@ -3,6 +3,7 @@ A little competition that draw patterns on a grid
 
 ## How to run?
   - npm install
+  - cp config.sample.js config.js
   - gulp
   - for player 
     + go to /www/index.html
