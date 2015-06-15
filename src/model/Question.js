@@ -23,8 +23,7 @@ fs.readdir( join(__dirname, '../question'), function(err,files){
 });
 
 exports.getQuestions = function(){
-  //return questions; // for testing
-  if( Game.isStarted() ) return questions;
+  if( Game.isStarted() || Game.isEnded() ) return questions;
 
   var res = {};
   for(var k in questions){

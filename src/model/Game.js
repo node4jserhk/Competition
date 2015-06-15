@@ -1,11 +1,12 @@
 var Log = require('../lib/Log.js');
 var U = require('../lib/utility.js');
+var config = require('../../config.js');
 
 ///////////////////////////////////////////////////////////
 /// initialization
 
 
-var mode = "before";
+var mode = config.initialMode || "before" ;
 var startTime = null;
 var endTime = null;
 var timer = null;
@@ -76,8 +77,7 @@ exports.isStarted = function(){
 };
 
 exports.isEnded = function(){
-  if( endTime === null ) return false;
-  return endTime < Date.now() ;
+  return mode === 'after';
 };
 
 exports.getTimes = function(callback){
